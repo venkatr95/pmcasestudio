@@ -1,0 +1,25 @@
+Business Source License 1.1
+License text copyright (c) 2017 MariaDB Corporation Ab, All Rights Reserved.
+"Business Source License" is a trademark of MariaDB Corporation Ab.
+
+Parameters
+=============================================================================
+Licensor: Venkat Madhavan
+Licensed Work: PM Case Studio
+Additional Use Grant: None
+Change Date: 4 years from the date the Licensed Work is published
+Change License: Apache License, Version 2.0
+For information about commercial licensing arrangements for the Licensed Work, please contact: venkat.madhavan@example.com
+
+Terms
+=============================================================================
+[...Core license terms regarding non-production use, transition to open source on Change Date,
+and warranty disclaimer, as defined in the official BSL 1.1 specification...]
+
+Notice
+=============================================================================
+The Business Source License (this document, or the “License”) is not an 
+Open Source license. However, the Licensed Work will eventually be made 
+available under an Open Source License, as stated in this License.
+
+Copyright (C) 2026 [Venkat Madhavan]. All Rights Reserved.This software and its source code are proprietary. Unauthorized copying, modification, distribution, or commercial reuse of this file, via any medium, is strictly prohibited.

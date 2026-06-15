@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PM Case Studio 🚀
 
-## Getting Started
+A McKinsey-grade workspace combining the best of Notion, Linear, and Pitch. From problem definition to executive-ready presentations — all in one platform.
 
-First, run the development server:
+## Features ✨
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+* **Structured PM Framework**: 7-phase guided wizard from problem definition to roadmap. Never miss a critical PM lens.
+* **Prioritization Frameworks**: Built-in RICE, MoSCoW & AARRR with auto-calculation and interactive matrices.
+* **Export Everything**: Generate PDF, DOCX, Marp decks, PPTX, and Markdown. Share via email instantly.
+* **AI-Assisted Analysis**: AI-powered SWOT, personas, PRDs, and executive summaries.
+* **Visual Themes**: 5 curated aesthetics (Aurora, Midnight, Minimal, Corporate, Neon) affecting your entire UI and your final exports.
+* **Secure Authentication**: Supports Passwordless (Google OAuth, Magic Links) and standard Email/Password credentials.
+* **Admin Portal**: Dedicated portal (`/admin/login`) with Role-Based Access Control (RBAC) to manage users and review case studies.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technology Stack 🛠️
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+* **Framework**: [Next.js 15](https://nextjs.org) (App Router)
+* **Language**: TypeScript
+* **Database**: PostgreSQL via [Supabase](https://supabase.com/) & [Prisma ORM](https://www.prisma.io/)
+* **Authentication**: [NextAuth.js v5](https://authjs.dev/)
+* **Styling**: Tailwind CSS, `motion/react` (Framer Motion), `lucide-react`
+* **Document Generation**: `@react-pdf/renderer` (PDF), `pptxgenjs` (PPTX), `docx` (Word)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Getting Started 🏁
 
-## Learn More
+### Prerequisites
+* Node.js v18+
+* npm, yarn, pnpm, or bun
 
-To learn more about Next.js, take a look at the following resources:
+### Setup
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Clone the repository** and install dependencies:
+   ```bash
+   npm install
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. **Configure Environment Variables**:
+   Create a `.env.local` file in the root directory and provide your Supabase PostgreSQL connection strings:
+   ```env
+   # Transactional connection pool (use the URL ending in 6543)
+   DATABASE_URL="postgresql://postgres.[ref]:[password]@aws-0-eu-central-1.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1"
 
-## Deploy on Vercel
+   # Direct connection for Prisma migrations (use the URL ending in 5432)
+   DIRECT_URL="postgresql://postgres.[ref]:[password]@aws-0-eu-central-1.pooler.supabase.com:5432/postgres"
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   # NextAuth
+   AUTH_SECRET="your-super-secret-key-at-least-32-chars-long"
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   # Optional: Google OAuth
+   AUTH_GOOGLE_ID="your-google-client-id"
+   AUTH_GOOGLE_SECRET="your-google-client-secret"
+   ```
+
+3. **Initialize the Database**:
+   ```bash
+   npx prisma db push
+   ```
+
+4. **Run the Development Server**:
+   ```bash
+   npm run dev
+   ```
+
+5. **Start Building!** Open [http://localhost:3000](http://localhost:3000) with your browser.
+
+## Contributing 🤝
+Contributions are welcome! Please feel free to submit a Pull Request.
