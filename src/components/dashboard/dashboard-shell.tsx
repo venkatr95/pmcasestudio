@@ -48,7 +48,6 @@ export function DashboardShell({ children, user, preferences }: DashboardShellPr
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
   useEffect(() => {
-    // eslint-disable-next-line react-compiler/react-compiler
     setMounted(true);
     setTheme(preferences.theme as ThemeType);
   }, [preferences.theme, setTheme]);

@@ -1,21 +1,36 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ShieldAlert, ShieldCheck, User, Users, ChevronDown, ChevronRight, FileText, Loader2, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
+interface CaseStudy {
+  id: string;
+  title: string;
+  status: string;
+  currentPhase: number;
+  updatedAt: string;
+}
+
+interface AdminUser {
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+  role: string;
+  createdAt: string;
+  _count?: { caseStudies: number };
+  caseStudies?: CaseStudy[];
+}
+
 export function UserManagementTable() {
   const router = useRouter();
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [expandedUserId, setExpandedUserId] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
       const res = await fetch('/api/admin/users');
       if (res.ok) {
@@ -26,7 +41,11 @@ export function UserManagementTable() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
 
   const toggleRole = async (userId: string, currentRole: string) => {
     const newRole = currentRole === 'ADMIN' ? 'USER' : 'ADMIN';
@@ -169,7 +188,7 @@ export function UserManagementTable() {
                               
                               {user.caseStudies && user.caseStudies.length > 0 ? (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                  {user.caseStudies.map((cs: any) => (
+                                  {user.caseStudies.map((cs: CaseStudy) => (
                                     <div key={cs.id} className="card-app p-3 flex items-start gap-3">
                                       <div className="w-8 h-8 rounded bg-accent-subtle-app border border-accent-app/20 flex items-center justify-center shrink-0">
                                         <span className="text-xs font-bold text-accent-app">P{cs.currentPhase}</span>

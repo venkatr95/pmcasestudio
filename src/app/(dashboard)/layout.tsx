@@ -7,14 +7,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const session = await auth();
   if (!session?.user) redirect('/login');
 
-  let preferences = await prisma.userPreferences.findUnique({
+  const preferences = await prisma.userPreferences.upsert({
     where: { userId: session.user.id! },
+    update: {},
+    create: { userId: session.user.id! },
   });
-
-  if (!preferences) {
-    // Make sure preferences exist
-    preferences = await prisma.userPreferences.create({ data: { userId: session.user.id! } });
-  }
 
   const dbUser = await prisma.user.findUnique({ where: { id: session.user.id } });
   

@@ -72,7 +72,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       async sendVerificationRequest(params) {
         const { identifier, url, provider, token } = params;
         const transport = createTransport(provider.server);
-        const result = await transport.sendMail({
+        
+        // Fire and forget the email sending to prevent blocking the login screen
+        transport.sendMail({
           to: identifier,
           from: provider.from,
           subject: `Your PM Case Studio Login Code is ${token}`,
@@ -88,21 +90,26 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               <p style="color: #999; font-size: 12px; margin-top: 32px;">If you didn't request this email, you can safely ignore it.</p>
             </div>
           `,
+        }).catch(err => {
+          console.error("Failed to send verification email:", err);
         });
-        const failed = result.rejected.concat(result.pending).filter(Boolean);
-        if (failed.length) {
-          throw new Error(`Email(s) (${failed.join(', ')}) could not be sent`);
-        }
       },
     }),
   ],
   session: { strategy: 'jwt' },
   callbacks: {
     ...authConfig.callbacks,
+    async signIn({ user }) {
+      return true;
+    },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
         token.role = (user as { role?: string }).role ?? 'USER';
+      }
+      // Remove large base64 strings from token to prevent cookie overflow
+      if (token.picture && token.picture.startsWith('data:image')) {
+        delete token.picture;
       }
       return token;
     },
@@ -115,10 +122,34 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
   },
   events: {
+    async signIn({ user }) {
+      if (user?.id) {
+        // Clear any stale sessions for this user, then create a fresh one
+        await prisma.session.deleteMany({ where: { userId: user.id } });
+        await prisma.session.create({
+          data: {
+            sessionToken: crypto.randomUUID(),
+            userId: user.id,
+            expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+          }
+        });
+      }
+    },
+    async signOut(args) {
+      // token.sub holds the user id in a JWT strategy
+      const userId = 'token' in args ? (args.token?.sub ?? args.token?.id as string) : null;
+      if (userId) {
+        await prisma.session.deleteMany({ where: { userId } });
+      }
+    },
     async createUser({ user }) {
-      await prisma.userPreferences.create({
-        data: { userId: user.id! },
-      });
+      try {
+        await prisma.userPreferences.create({
+          data: { userId: user.id! },
+        });
+      } catch (error) {
+        console.error('Error creating user preferences:', error);
+      }
     },
   },
 });

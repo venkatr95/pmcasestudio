@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { LoginForm } from '@/components/auth/login-form';
 import Link from 'next/link';
 
+import { Suspense } from 'react';
+
 export const metadata: Metadata = {
   title: 'Sign In',
   description: 'Sign in to your PM Case Studio account',
@@ -25,7 +27,9 @@ export default function LoginPage() {
 
       {/* Card */}
       <div className="glass-strong rounded-2xl p-8">
-        <LoginForm />
+        <Suspense fallback={<div>Loading form...</div>}>
+          <LoginForm />
+        </Suspense>
         <div className="mt-6 text-center">
           <p className="text-sm text-muted-app">
             Don&apos;t have an account?{' '}

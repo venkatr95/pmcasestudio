@@ -26,7 +26,6 @@ export function CaseStudyThemeProvider({
       // Revert back when leaving the case study pages
       setTheme(previousTheme.current);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme, setTheme]);
 
   return <>{children}</>;
